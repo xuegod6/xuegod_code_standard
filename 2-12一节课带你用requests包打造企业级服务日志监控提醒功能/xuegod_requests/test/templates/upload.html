@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+  src="http://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>文件上传示例</h1>
+<form action="http://127.0.0.1:5000/upload" enctype='multipart/form-data' method='POST'>
+    <input type="file" name="file">
+    <input type="submit" value="加密上传">
+
+</form>
+<div id="filelist">文件列表
+</div>
+</body>
+<script>
+    var domainName = 'http://127.0.0.1:5000';
+    $(document).ready(function () {
+        function downForm() {
+            $.ajax({
+                url: domainName + "/filepath",
+                type: 'GET', //GET
+                async: false, //或false,是否异步
+                timeout: 5000, //超时时间    //返回的数据格式：json/xml/html/script/jsonp/text
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    for (var i = 0; i < data.data.length; i++) {
+                        var htmlStr = '<div class="my_download"><input type="text" readonly="readonly" value="' + data.data[i] + '"/><button class="down_btn">加密按钮</button><button class="btn_jiemi">解密</button><input class="mypassword" style="display:none;" placeholder="请输入密码"/><button class="btn_pass" style="display:none;">确认加密</button><button class="btn_jiemi_submit" style="display:none;">确认解密</button></div>';
+                        $("#filelist").append(htmlStr);
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误')
+                    console.log(xhr)
+                    console.log(textStatus)
+                },
+                complete: function () {
+                    console.log('结束')
+                }
+            });
+        }
+
+        downForm();
+        $(".down_btn").click(function () {
+            $(this).parent().find("input:eq(1)").show();
+            $(this).parent().find("button:eq(2)").show();
+        });
+        $(".btn_jiemi").click(function () {
+            $(this).parent().find("input:eq(1)").show();
+            $(this).parent().find("button:eq(3)").show();
+        });
+        $(".btn_pass").click(function () {
+            var filename = $(this).parent().find("input:eq(0)").val();
+            $.ajax({
+                url: domainName + "/jiami/",
+                type: 'GET', //GET
+                async: false, //或false,是否异步
+                timeout: 5000, //超时时间    //返回的数据格式：json/xml/html/script/jsonp/text
+                dataType: 'json',
+                data: {
+                    'filename': filename,
+                    'password': $(this).parent().find("input:eq(1)").val(),
+                },
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误')
+                    console.log(xhr)
+                    console.log(textStatus)
+                },
+                complete: function () {
+                    console.log('结束')
+                }
+            });
+        });
+        $(".btn_jiemi_submit").click(function () {
+            var filename = $(this).parent().find("input:eq(0)").val();
+            $.ajax({
+                url: domainName + "/jiemi/",
+                type: 'GET', //GET
+                async: false, //或false,是否异步
+                timeout: 5000, //超时时间    //返回的数据格式：json/xml/html/script/jsonp/text
+                dataType: 'json',
+                data: {
+                    'filename': filename,
+                    'password': $(this).parent().find("input:eq(1)").val(),
+                },
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误')
+                    console.log(xhr)
+                    console.log(textStatus)
+                },
+                complete: function () {
+                    console.log('结束')
+                }
+            });
+        });
+    });
+</script>
+</html>

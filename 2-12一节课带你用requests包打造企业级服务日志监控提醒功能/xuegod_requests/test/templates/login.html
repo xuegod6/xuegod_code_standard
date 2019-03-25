@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+  src="http://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>登录</h1>
+<div>
+    <input type="text" id="username">
+    <input type="password" id="password">
+    <input type="submit" value="登录" id="submit">
+</div>
+<div id="filelist">文件列表
+</div>
+</body>
+<script>
+    var domainName = 'http://127.0.0.1:5000';
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            alert(username);
+            $.ajax({
+                url: domainName + "/login",
+                type: 'POST', //GET
+                async: false, //或false,是否异步
+                timeout: 5000, //超时时间    //返回的数据格式：json/xml/html/script/jsonp/text
+                dataType: 'json',
+                data: {
+                    'username': username,
+                    'password': password,
+                },
+                success: function (data) {
+                    if (data == 200) {
+                        $(window).attr('location', domainName + "/")
+                    } else {
+                        alert('用户名或密码错误');
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误')
+                    console.log(xhr)
+                    console.log(textStatus)
+                },
+                complete: function () {
+                    console.log('结束')
+                }
+            });
+        });
+    });
+</script>
+</html>
